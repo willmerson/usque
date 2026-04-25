@@ -60,10 +60,12 @@ func main() {
 		log.Fatalf("Failed to open cert.pem for writing: %v", err)
 	}
 
+	// Use a 90-day validity period instead of 365 days, matching typical
+	// short-lived cert practices (e.g. Let's Encrypt style).
 	certDER, err := x509.CreateCertificate(rand.Reader, &x509.Certificate{
 		SerialNumber: big.NewInt(0),
 		NotBefore:    time.Now(),
-		NotAfter:     time.Now().Add(365 * 24 * time.Hour),
+		NotAfter:     time.Now().Add(90 * 24 * time.Hour),
 	}, &x509.Certificate{}, &privKey.PublicKey, privKey)
 	if err != nil {
 		log.Fatalf("Failed to create certificate: %v", err)
